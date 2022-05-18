@@ -1,18 +1,12 @@
-import imp
 from .button import MyButton
 from .board import Board
+from .serverList import ServerList
 from tkinter import Frame
 
 
 class MainMenu:
     def __init__(self, window) -> None:
         self.main_menu = Frame(window.root, bg="yellow")
-        self.host_btn = MyButton(
-            self.main_menu,
-            "Host",
-            command=window.show_host_menu,
-            size={"HEIGHT": 2, "WIDTH": 8},
-        )
         self.join_btn = MyButton(
             self.main_menu,
             "Join",
@@ -39,26 +33,11 @@ class MainMenu:
         self.main_menu.pack_forget()
 
 
-class HostMenu:
-    def __init__(self, window) -> None:
-        self.host_menu = Frame(window.root, bg="blue")
-        self.back_btn = MyButton(
-            self.host_menu,
-            "Back",
-            command=window.show_main_menu,
-            size={"HEIGHT": 2, "WIDTH": 8},
-        )
-
-    def show(self) -> None:
-        self.host_menu.pack(fill="both", expand=True)
-
-    def unshow(self) -> None:
-        self.host_menu.pack_forget()
-
-
 class JoinMenu:
-    def __init__(self, window) -> None:
+    def __init__(self, window, client) -> None:
+        self.client = client
         self.join_menu = Frame(window.root, bg="red")
+        self.server_list = ServerList(self.join_menu, self.client)
         self.back_btn = MyButton(
             self.join_menu,
             "Back",
@@ -95,3 +74,12 @@ class GameMenu:
 
     def unshow(self) -> None:
         self.game_menu.pack_forget()
+
+
+class LobbyMenu:
+    def __init__(self, window, client) -> None:
+        self.client = client
+        self.lobby = Frame(None, bg="blue")
+
+    def show(self) -> None:
+        self.lobby.pack(fill="both", expand=True)

@@ -29,3 +29,16 @@ class BoardButton(MyButton):
 
     def click(self) -> None:
         self.send_command(self.pos, "x")
+
+
+class ConnectButton:
+    def __init__(self, window, command, size, grid) -> None:
+        self.my_btn = Button(
+            window,
+            text="Connect",
+            command=command,
+            height=size["HEIGHT"],
+            width=size["WIDTH"],
+        )
+        self.window = window
+        self.my_btn.grid(row=grid["row"], column=grid["column"])

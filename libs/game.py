@@ -1,6 +1,6 @@
 from tkinter import Tk
-from libs.ui.menu import MainMenu, HostMenu, JoinMenu, GameMenu
-from libs.ui.board import Board
+from libs.ui.menu import MainMenu, JoinMenu, GameMenu
+from libs.netcode.client import Client
 
 
 class Game:
@@ -9,27 +9,23 @@ class Game:
         self.width = settings["WIDTH"]
         self.height = settings["HEIGHT"]
 
+        self.client = Client()
+
         self.root = Tk()
         self.root.title(self.title)
         self.root.geometry(f"{self.width}x{self.height}")
 
         self.main_menu = MainMenu(self)
-        self.host_menu = HostMenu(self)
-        self.join_menu = JoinMenu(self)
+        self.join_menu = JoinMenu(self, self.client)
         self.game_menu = GameMenu(self)
 
         self.main_menu.show()
-
-    def show_host_menu(self) -> None:
-        self.main_menu.unshow()
-        self.host_menu.show()
 
     def show_join_menu(self) -> None:
         self.main_menu.unshow()
         self.join_menu.show()
 
     def show_main_menu(self) -> None:
-        self.host_menu.unshow()
         self.join_menu.unshow()
         self.game_menu.unshow()
         self.main_menu.show()
