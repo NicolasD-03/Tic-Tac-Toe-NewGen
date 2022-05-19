@@ -1,9 +1,12 @@
-from http import client
-import socket
+from tkinter import Tk
+
+from libs.ui.board import Board
 
 
-nickname = input("Enter your nickname: ")
+window = Tk()
+window.geometry("900x900")
+board_list = [["", "", ""], ["", "", ""], ["", "", ""]]
+board = Board(window, board_list)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(("localhost", 5556))
-sock.send(nickname.encode())
+
+window.mainloop()

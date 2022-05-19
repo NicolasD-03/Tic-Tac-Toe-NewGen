@@ -13,12 +13,12 @@ class MainMenu:
             command=window.show_join_menu,
             size={"HEIGHT": 2, "WIDTH": 8},
         )
-        self.game_btn = MyButton(
-            self.main_menu,
-            "Game",
-            command=window.show_board,
-            size={"HEIGHT": 2, "WIDTH": 8},
-        )
+        # self.game_btn = MyButton(
+        #     self.main_menu,
+        #     "Game",
+        #     command=window.show_board,
+        #     size={"HEIGHT": 2, "WIDTH": 8},
+        # )
         self.quit_btn = MyButton(
             self.main_menu,
             "Quit",

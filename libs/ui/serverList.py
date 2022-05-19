@@ -64,7 +64,8 @@ class ServerList:
 
                     ConnectButton(
                         self.server_list_window,
-                        lambda: self.click(self.server_list[i]["PORT"]),
+                        self,
+                        self.server_list[i]["PORT"],
                         size={"HEIGHT": 2, "WIDTH": 8},
                         grid={"row": i, "column": 3},
                     )
@@ -82,7 +83,8 @@ class ServerList:
                 ).grid(padx=10, pady=10, row=0, column=2)
                 ConnectButton(
                     self.server_list_window,
-                    lambda: self.click(self.server_list["PORT"]),
+                    self,
+                    self.server_list["PORT"],
                     size={"HEIGHT": 2, "WIDTH": 8},
                     grid={"row": 0, "column": 3},
                 )
@@ -92,15 +94,3 @@ class ServerList:
     def clear_frame(self) -> None:
         for widget in self.server_list_window.winfo_children():
             widget.destroy()
-
-    def click(self, port) -> None:
-        # self.client_TCP.connect("localhost", port)
-        # if self.nickname.get() != "":
-        #     self.client_TCP.send(self.nickname.get())
-        # else:
-        #     self.client_TCP.send("Anonymous")
-
-        print(port)
-
-        # self.lobby = LobbyMenu(self.window, self.client)
-        # self.lobby.show()
