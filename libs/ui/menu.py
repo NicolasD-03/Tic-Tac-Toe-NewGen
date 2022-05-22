@@ -1,5 +1,4 @@
 from .button import MyButton
-from .board import Board
 from .serverList import ServerList
 from tkinter import Frame
 
@@ -13,12 +12,6 @@ class MainMenu:
             command=window.show_join_menu,
             size={"HEIGHT": 2, "WIDTH": 8},
         )
-        # self.game_btn = MyButton(
-        #     self.main_menu,
-        #     "Game",
-        #     command=window.show_board,
-        #     size={"HEIGHT": 2, "WIDTH": 8},
-        # )
         self.quit_btn = MyButton(
             self.main_menu,
             "Quit",
@@ -36,8 +29,9 @@ class MainMenu:
 class JoinMenu:
     def __init__(self, window, client) -> None:
         self.client = client
+        self.root_window = window
         self.join_menu = Frame(window.root, bg="red")
-        self.server_list = ServerList(self.join_menu, self.client)
+        self.server_list = ServerList(self.join_menu, self.client, self)
         self.back_btn = MyButton(
             self.join_menu,
             "Back",
@@ -74,12 +68,3 @@ class GameMenu:
 
     def unshow(self) -> None:
         self.game_menu.pack_forget()
-
-
-class LobbyMenu:
-    def __init__(self, window, client) -> None:
-        self.client = client
-        self.lobby = Frame(None, bg="blue")
-
-    def show(self) -> None:
-        self.lobby.pack(fill="both", expand=True)

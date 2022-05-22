@@ -1,5 +1,5 @@
 from tkinter import Tk
-from libs.ui.menu import MainMenu, JoinMenu, GameMenu
+from libs.ui.menu import MainMenu, JoinMenu
 from libs.netcode.client import Client
 
 
@@ -17,7 +17,6 @@ class Game:
 
         self.main_menu = MainMenu(self)
         self.join_menu = JoinMenu(self, self.client)
-        # self.game_menu = GameMenu(self)
 
         self.main_menu.show()
 
@@ -29,10 +28,6 @@ class Game:
         self.join_menu.unshow()
         # self.game_menu.unshow()
         self.main_menu.show()
-
-    # def show_board(self) -> None:
-    #     self.main_menu.unshow()
-    #     self.game_menu.show()
 
     def quit(self) -> None:
         self.root.destroy()

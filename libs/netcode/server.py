@@ -1,9 +1,7 @@
-from http import server
 import socket
 import threading
 import time
-
-from libs.ui.serverList import ServerList
+import ast
 
 
 class MainServer:
@@ -61,6 +59,9 @@ class GameServer:
         self.game_status = "lobby"
         self.clients = []
         self.nicknames = []
+        self.player_turn = "X"
+        self.turn = 0
+        self.board_list = [["", "", ""], ["", "", ""], ["", "", ""]]
 
     def broadcast(self, message: str) -> None:
         for client in self.clients:
@@ -69,8 +70,8 @@ class GameServer:
     def handle(self, client: socket.socket):
         while True:
             try:
-                message = client.recv(1024)
-                self.client_message_checks(message)
+                message = client.recv(1024).decode()
+                self.client_message_checks(message, client)
             except ConnectionResetError:
                 break
 
@@ -85,10 +86,20 @@ class GameServer:
 
                 print(f"{nickname} connected")
 
+                if len(self.clients) == 1:
+                    player = "X"
+                elif len(self.clients) == 2:
+                    player = "O"
+
+                client.send(f"PLAYER>{player}".encode())
+                time.sleep(1)
+                self.broadcast(f"LOBBY_INFO>{str(self.nicknames)}")
+
                 thread = threading.Thread(target=self.handle, args=(client,))
                 thread.start()
+
             else:
-                break
+                pass
 
     def send_servers_status(self) -> None:
         while True:
@@ -107,8 +118,96 @@ class GameServer:
                     f"GAME_SERV>{info_mess}".encode(), address
                 )
 
-    def client_message_checks(self, message) -> None:
-        pass
+    def client_message_checks(self, message, client) -> None:
+        if message.split(">")[0] == "START_GAME":
+            self.game_status = "game"
+            self.broadcast("GAME_STARTED")
+            time.sleep(0.5)
+            self.broadcast(f"TURN>{self.player_turn}")
+        if message.split(">")[0] == "CLICK":
+            btn_id = message.split(">")[1]
+            btn_pos = ast.literal_eval(message.split(">")[2])
+            player = message.split(">")[3]
+            self.board_list[btn_pos["X"]][btn_pos["Y"]] = player
+            self.turn += 1
+
+            time.sleep(0.5)
+
+            self.broadcast(f"MOVE>{btn_id}>{player}")
+
+            time.sleep(0.5)
+
+            winner = self.check_winner()
+
+            if winner:
+                self.broadcast(f"WINNER>{winner}")
+                self.game_status = "lobby"
+                self.clients = []
+                self.nicknames = []
+                self.board_list = [["", "", ""], ["", "", ""], ["", "", ""]]
+            elif self.turn == 9:
+                self.broadcast("DRAW")
+                self.game_status = "lobby"
+                self.clients = []
+                self.nicknames = []
+                self.board_list = [["", "", ""], ["", "", ""], ["", "", ""]]
+            else:
+                self.player_turn = "X" if self.player_turn == "O" else "O"
+                self.broadcast(f"TURN>{self.player_turn}")
+
+            print(self.board_list)
+
+    def check_winner(self) -> None:
+        # Check rows
+        for x in self.board_list:
+            # Check rows
+            if x[0] == x[1] == x[2] != "":
+                print("Winner is: " + x[0])
+                return x[0]
+
+        # Check coloumns
+        if (
+            self.board_list[0][0]
+            == self.board_list[1][0]
+            == self.board_list[2][0]
+            != ""
+        ):
+            print("Winner is: " + self.board_list[0][0])
+            return self.board_list[0][0]
+        elif (
+            self.board_list[0][1]
+            == self.board_list[1][1]
+            == self.board_list[2][1]
+            != ""
+        ):
+            print("Winner is: " + self.board_list[0][1])
+            return self.board_list[0][1]
+        elif (
+            self.board_list[0][2]
+            == self.board_list[1][2]
+            == self.board_list[2][2]
+            != ""
+        ):
+            print("Winner is: " + self.board_list[0][2])
+            return self.board_list[0][2]
+
+        # Check diagonals
+        if (
+            self.board_list[0][0]
+            == self.board_list[1][1]
+            == self.board_list[2][2]
+            != ""
+        ):
+            print("Winner is: " + self.board_list[0][0])
+            return self.board_list[0][0]
+        elif (
+            self.board_list[0][2]
+            == self.board_list[1][1]
+            == self.board_list[2][0]
+            != ""
+        ):
+            print("Winner is: " + self.board_list[0][2])
+            return self.board_list[0][2]
 
     def start(self) -> None:
         print("Server started")

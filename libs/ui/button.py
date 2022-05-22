@@ -1,5 +1,7 @@
 from tkinter import Button
 
+from .lobby import LobbyMenu
+
 
 class MyButton:
     def __init__(self, window, title, command, size) -> None:
@@ -13,31 +15,8 @@ class MyButton:
         self.my_btn.pack()
 
 
-class BoardButton:
-    def __init__(self, window, title, size, pos, command) -> None:
-        self.window = window
-        self.title = title
-        self.size = size
-        self.pos = pos
-        self.command = command
-        self.my_btn = Button(
-            self.window,
-            text=self.title,
-            command=self.command,
-            height=self.size["HEIGHT"],
-            width=self.size["WIDTH"],
-        )
-        self.my_btn.grid(row=pos["X"], column=pos["Y"])
-
-    def change_text(self, text) -> None:
-        self.my_btn.config(text=text)
-
-    def disable(self) -> None:
-        self.my_btn.config(state="disabled")
-
-
 class ConnectButton:
-    def __init__(self, window, parent, port, size, grid) -> None:
+    def __init__(self, window, parent, port, clients, size, grid) -> None:
         self.my_btn = Button(
             window,
             text="Connect",
@@ -49,6 +28,10 @@ class ConnectButton:
         self.my_btn.grid(row=grid["row"], column=grid["column"])
         self.parent = parent
         self.port = port
+        self.clients = clients
+
+        if len(self.clients) == 2:
+            self.my_btn.config(state="disabled")
 
     def click(self) -> None:
         self.parent.client_TCP.connect("localhost", self.port)
@@ -56,3 +39,6 @@ class ConnectButton:
             self.parent.client_TCP.send(self.parent.nickname.get())
         else:
             self.parent.client_TCP.send("Anonymous")
+        self.lobby_menu = LobbyMenu(self.parent.client_TCP)
+        self.lobby_menu.show()
+        self.parent.join_menu.unshow()

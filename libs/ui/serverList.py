@@ -1,4 +1,3 @@
-from http import server
 from tkinter import Frame, Label, Entry
 import sys
 import ast
@@ -10,8 +9,9 @@ from .button import MyButton, ConnectButton
 
 
 class ServerList:
-    def __init__(self, root, client) -> None:
+    def __init__(self, root, client, joinMenu) -> None:
         self.root = root
+        self.join_menu = joinMenu
         self.client = ClientUDP()
         self.server_list = []
         self.error_message = ""
@@ -66,6 +66,7 @@ class ServerList:
                         self.server_list_window,
                         self,
                         self.server_list[i]["PORT"],
+                        self.server_list[i]["CLIENTS"],
                         size={"HEIGHT": 2, "WIDTH": 8},
                         grid={"row": i, "column": 3},
                     )
@@ -85,6 +86,7 @@ class ServerList:
                     self.server_list_window,
                     self,
                     self.server_list["PORT"],
+                    self.server_list["CLIENTS"],
                     size={"HEIGHT": 2, "WIDTH": 8},
                     grid={"row": 0, "column": 3},
                 )
