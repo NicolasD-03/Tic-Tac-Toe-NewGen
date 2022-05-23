@@ -21,15 +21,16 @@ class Client:
 class ClientUDP:
     def __init__(self) -> str:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # self.socket.settimeout(10)
+        self.socket.settimeout(10)
 
     def get_servers_list(self) -> str:
         print("Searching for servers...")
         self.socket.sendto(
-            "SERVER_INFO_CLIENT".encode(), ("82.64.62.127", 5555)
+            "SERVER_INFO_CLIENT".encode(), ("192.168.2.2", 5555)
         )
         try:
             msg = self.socket.recvfrom(1024)[0].decode()
+            print(msg)
             if len(msg) > 2:
                 return msg.replace('"', "")[1:][:-1]
             else:

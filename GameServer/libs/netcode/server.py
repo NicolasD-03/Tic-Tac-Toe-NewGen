@@ -11,7 +11,7 @@ class GameServer:
         self.socket_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_server.bind(("0.0.0.0", self.port))
         self.socket_client.bind(("0.0.0.0", self.port))
-        self.socket_client.listen(5)
+        self.socket_client.listen(10)
 
         self.game_status = "lobby"
         self.clients = []
