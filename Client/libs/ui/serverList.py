@@ -5,7 +5,7 @@ import ast
 sys.path.append("../../../Tic-Tac-Toe-NewGen")
 
 from libs.netcode.client import ClientUDP
-from .button import MyButton, ConnectButton
+from .button import MyButton, ConnectButton, DirectConnectButton
 
 
 class ServerList:
@@ -33,6 +33,17 @@ class ServerList:
         self.nickname_label.pack()
         self.nickname = Entry(self.main_window)
         self.nickname.pack()
+        self.ip_label = Label(self.main_window, text="IP:")
+        self.ip_label.pack()
+        self.ip_entry = Entry(self.main_window)
+        self.ip_entry.pack()
+        self.port_label = Label(self.main_window, text="Port:")
+        self.port_label.pack()
+        self.port_entry = Entry(self.main_window)
+        self.port_entry.pack()
+        self.direct_connect_btn = DirectConnectButton(
+            self.main_window, self, size={"HEIGHT": 2, "WIDTH": 10}
+        )
 
     def update_list(self) -> None:
         result = self.client.get_servers_list()
